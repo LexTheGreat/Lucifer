@@ -8,6 +8,7 @@ var Guild = require('../objects/guild');
 var Player = require('../objects/player');
 
 // ETC
+var Moment = require('moment');
 var sqlite3 = require("sqlite3").verbose();
 var FileSystem = require("fs");
 var async = require("async");
@@ -48,6 +49,14 @@ Database.prototype = {
 				db.run("CREATE TABLE Guilds (Name TEXT, Owner INT, CoOwner INT, Data INT, Key INT, Members VARCHAR)");
 			}
 		});
+		
+		exists = FileSystem.existsSync("./backups/");
+		
+		if(!exists) {
+			NConsole.writeLine("Creating Backups Folder...");
+			FileSystem.mkdirSync("./backups/");
+		}
+		
 		this.loadData(vb);
 	},
 	close: function() {
@@ -91,8 +100,8 @@ Database.prototype = {
 				safethis.setGuilds();
 			} else { NConsole.writeLine("Could not find Database."); }
 		})
-		NConsole.writeLine(`Saved.`);
-		global.saving = false;
+		NConsole.writeLine(`Saved Database, Saved Backup.`);
+		FileSystem.createReadStream('data.db').pipe(FileSystem.createWriteStream(`./backups/${Moment().format('MM-DD-YYYY[_]h:mm:ss')}.db`.replace(/\:/g, "-")));
 	},
 	
 	/* Get */

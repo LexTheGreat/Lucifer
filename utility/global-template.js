@@ -7,7 +7,7 @@ var Global = function() {
 		Express: require('express'),
 		Moment: require('moment'),
 		bodyParser: require('body-parser'),
-		TelegramBot: require('node-telegram-bot-api'),
+		TelegramBot: require("tgfancy"),
 		Database: require("./database")
 	};
 	
